@@ -27,20 +27,24 @@
             <div class="col-sm-4 bg-light">
                 <!-- top part: "search for a city" form -->
                 <form id="city-form" class="form-group p-1">
-                <label class="h4" for="city-name">Search for a City:</label>
-                <div class="form-inline">
-                    <input name="city-name" id="city-name" type="text" autofocus="true" class="form-control w-75" />
-                    <button type="submit" class="btn bg-primary text-white">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </div>
-            </form>
+                    <label class="h4" for="city-name">Search for a City:</label>
+                    <div class="form-inline">
+                        <input name="city-name" id="city-name" type="text" autofocus="true" class="form-control w-60" />
+                        <button type="submit" class="btn bg-primary text-white">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
 
                 <!-- bottom part: list of all previously-searched cities -->
+                <ul id="history" class="list-group">
+                    <li class="list-group-item">Test: Dublin</li>
+                    <li class="list-group-item">Test: San Francisco</li>
+                </ul>
             </div>
             <!-- right side: main -->
-            <main class="col-sm-8 border">
-                <p>test</p>
+            <main class="col-sm border">
+                <p>test <br><br><br><br><br><br><br><br><br><br><br></p>
                 <!-- top part: display the city that was clicked on  -->
                 <!-- bottom part: display a 5-day weather forecast with cards -->
             </main>
