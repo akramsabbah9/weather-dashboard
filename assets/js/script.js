@@ -1,6 +1,8 @@
 /* GLOBALS */
 // information for a city will be stored in a cityInfo object,
 // which looks like: { name, date, weatherIcon, desc, temp, humidity, windSpeed, uvIndex }
+// information for the 5-day forecast will be stored in forecastInfo
+// which looks like: [{date, weatherIcon, desc, temp, humidity, windSpeed}, ...]
 
 // array to hold past city names
 var searchHistory = [];
@@ -9,7 +11,7 @@ var searchHistory = [];
 var searchFormEl = document.querySelector("#city-form");
 var searchInputEl = document.querySelector("#city-search");
 var cityDisplayEl = document.querySelector("#city-display");
-var cityForecastEl = document.querySelector("#five-day-forecast");
+var forecastEl = document.querySelector("#five-day-forecast");
 var historyEl = document.querySelector("#history");
 
 
@@ -21,11 +23,25 @@ var historyEl = document.querySelector("#history");
 var getCity = function (name, changeHistory) {
     var apiUrl = "http://api.openweathermap.org/data/2.5/weather?q=" + name +
       "&appid=118ffe51d5d5c6c938996e3658689365";
+
+    var forecastUrl = "http://api.openweathermap.org/data/2.5/forecast?q=" + name +
+      "&appid=118ffe51d5d5c6c938996e3658689365"
     
     fetch(apiUrl).then(function(response) {
         if (response.ok) {
             response.json().then(function (data) {
                 handleCityData(data, changeHistory);
+            });
+        }
+        else {
+            alert("Error: " + response.statusText);
+        }
+    });
+
+    fetch(forecastUrl).then(function(response) {
+        if (response.ok) {
+            response.json().then(function (data) {
+                //handleForecastData(data);
             });
         }
         else {
@@ -53,7 +69,7 @@ var handleCityData = function (data, changeHistory) {
         name: data.name,
         date: date,
         weatherIcon: data.weather[0].icon,
-        desc: data.weather[0].desc,
+        desc: data.weather[0].description,
         temp: temp.toFixed(2),
         humidity: data.main.humidity,
         windSpeed: data.wind.speed
@@ -139,6 +155,61 @@ var displayHistory = function () {
 
         // append this list element to the ul
         historyEl.appendChild(listNameEl);
+    }
+};
+
+// TODO: display forecast cards using forecastInfo
+var displayForecast = function (forecastInfo) {
+    // clear old forecast
+    forecastEl.innerHTML = "";
+
+    // add h2 and row
+    var h2El = document.createElement("h2");
+    h2El.textContent = "5-Day Forecast:"
+    forecastEl.appendChild(h2El);
+
+    var rowEl = document.createElement("div");
+    rowEl.className = "row";
+    forecastEl.appendChild(rowEl);
+
+    // for each element in forecastInfo:
+    for (let i = 0; i < forecastInfo.length; i++) {
+        // make a card
+        var cardEl = document.createElement("div");
+        cardEl.className = "card col-sm-2 bg-primary text-white p-2 ml-3";
+        rowEl.appendChild(cardEl);
+
+        // date
+        var dateEl = document.createElement("h5");
+        dateEl.className = "card-title";
+        dateEl.textContent = forecastInfo[i].date;
+        cardEl.appendChild(dateEl);
+
+        // weatherIcon
+        var weatherEl = document.createElement("img");
+        weatherEl.className = "w-50 mx-auto card-text";
+        weatherEl.setAttribute("src", "https://openweathermap.org/img/w/" +
+          forecastInfo[i].weatherIcon + ".png");
+        weatherEl.setAttribute("alt", forecastInfo[i].desc);
+        cardEl.appendChild(weatherEl);
+
+        // temp
+        var tempEl = document.createElement("p");
+        tempEl.className = "card-text";
+        tempEl.textContent = "Temp: " + forecastInfo[i].temp + " ˚F";
+        cardEl.appendChild(tempEl);
+
+        // humidity
+        var humEl = document.createElement("p");
+        humEl.className = "card-text";
+        humEl.textContent = "Humidity: " + forecastInfo[i].humidity + "%";
+        cardEl.appendChild(humEl);
+
+        // windSpeed
+        var windEl = document.createElement("p");
+        windEl.className = "card-text";
+        windEl.textContent = "Wind Speed: " + forecastInfo[i].windSpeed + " MPH";
+        cardEl.appendChild(windEl);
     }
 };
 
