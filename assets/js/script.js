@@ -41,7 +41,7 @@ var getCity = function (name, changeHistory) {
     fetch(forecastUrl).then(function(response) {
         if (response.ok) {
             response.json().then(function (data) {
-                //handleForecastData(data);
+                handleForecastData(data);
             });
         }
         else {
@@ -51,7 +51,7 @@ var getCity = function (name, changeHistory) {
 };
 
 
-// construct a cityInfo object from data and displays it
+// construct a cityInfo object from data and display it
 var handleCityData = function (data, changeHistory) {
     // if changeHistory is true, add name to search history and update localStorage
     if (changeHistory) {
@@ -92,6 +92,36 @@ var handleCityData = function (data, changeHistory) {
             alert("Error: " + response.statusText);
         }
     });
+};
+
+
+// construct a forecastInfo array from data and display it
+var handleForecastData = function (data) {
+    var forecastInfo = [];
+    
+    // add 5 objects to forecastInfo: data.list[0], [8], [16], [24], [32]
+    for (let i = 0; i < 5; i++) {
+        var current = data.list[i*8 + 7];
+
+        // format date from UTC unix timestamp to a MM/DD/YYYY string
+        var date = moment.unix(current.dt).format("MM/DD/YYYY");
+
+        // format temperature from Kelvin to Fahrenheit
+        var temp = (current.main.temp - 273.15) * 9/5 + 32;
+
+        // build an object
+        forecastInfo.push({
+            date: date,
+            weatherIcon: current.weather[0].icon,
+            desc: current.weather[0].description,
+            temp: temp.toFixed(2),
+            humidity: current.main.humidity,
+            windSpeed: current.wind.speed
+        });
+    }
+
+    // once all forecast data is inserted into forecastInfo, display it
+    displayForecast(forecastInfo);
 };
 
 
@@ -158,7 +188,8 @@ var displayHistory = function () {
     }
 };
 
-// TODO: display forecast cards using forecastInfo
+
+// display forecast cards using forecastInfo
 var displayForecast = function (forecastInfo) {
     // clear old forecast
     forecastEl.innerHTML = "";
@@ -176,7 +207,7 @@ var displayForecast = function (forecastInfo) {
     for (let i = 0; i < forecastInfo.length; i++) {
         // make a card
         var cardEl = document.createElement("div");
-        cardEl.className = "card col-sm-2 bg-primary text-white p-2 ml-3";
+        cardEl.className = "card col-sm-2 bg-primary text-white p-2 ml-3 pb-3";
         rowEl.appendChild(cardEl);
 
         // date
@@ -187,7 +218,7 @@ var displayForecast = function (forecastInfo) {
 
         // weatherIcon
         var weatherEl = document.createElement("img");
-        weatherEl.className = "w-50 mx-auto card-text";
+        weatherEl.className = "h-40 w-40 mx-auto card-text";
         weatherEl.setAttribute("src", "https://openweathermap.org/img/w/" +
           forecastInfo[i].weatherIcon + ".png");
         weatherEl.setAttribute("alt", forecastInfo[i].desc);
@@ -208,7 +239,7 @@ var displayForecast = function (forecastInfo) {
         // windSpeed
         var windEl = document.createElement("p");
         windEl.className = "card-text";
-        windEl.textContent = "Wind Speed: " + forecastInfo[i].windSpeed + " MPH";
+        windEl.textContent = "Wind: " + forecastInfo[i].windSpeed + " MPH";
         cardEl.appendChild(windEl);
     }
 };
@@ -221,7 +252,7 @@ var getStorage = function () {
 
     var lastCity = localStorage.getItem("lastCity");
     if (lastCity) {
-        displayCity(JSON.parse(lastCity));
+        getCity(JSON.parse(lastCity), false);
     }
 };
 
@@ -240,7 +271,7 @@ var updateHistory = function (name) {
 
 // push the currently displayed city's cityInfo object to localStorage
 var updateStorage = function (cityInfo) {
-    localStorage.setItem("lastCity", JSON.stringify(cityInfo));
+    localStorage.setItem("lastCity", JSON.stringify(cityInfo.name));
 };
 
 
