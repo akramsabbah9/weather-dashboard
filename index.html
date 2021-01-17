@@ -6,13 +6,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" />
     <link rel="stylesheet" href="./assets/css/style.css" />
 
     <title>Weather Dashboard</title>
 </head>
 
 <body>
-    
+    <!-- weather dashboard header bar -->
+    <header class="bg-dark text-white text-center p-1">
+        <h1>Weather Dashboard</h1>
+    </header>
+
+    <!-- split page in two -->
+    <div class="container-fluid">
+        <div class="row">
+
+            <!-- left side: form and history -->
+            <div class="col-sm-4 bg-light">
+                <!-- top part: "search for a city" form -->
+                <form id="city-form" class="form-group p-1">
+                    <label class="h4" for="city-search">Search for a City:</label>
+                    <div class="form-inline">
+                        <input name="city-search" id="city-search" type="text" autofocus="true" class="form-control w-60" />
+                        <button type="submit" class="btn bg-primary text-white">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- bottom part: list of all previously-searched cities -->
+                <ul id="history" class="list-group"></ul>
+            </div>
+
+            <!-- right side: main card and 5 day forecast -->
+            <main class="col-sm">
+                <!-- top part: display the city that was clicked on  -->
+                <div id="city-display"></div>
+
+                <!-- bottom part: display a 5-day weather forecast with cards -->
+                <div id="five-day-forecast"></div>
+            </main>
+            
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="./assets/js/script.js"></script>
 </body>
 </html>

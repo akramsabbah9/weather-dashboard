@@ -2,4 +2,19 @@
     box-sizing: border-box;
 }
 
+h1 {
+    font-weight: 600;
+}
+
+.h-40 {
+    height: 40% !important;
+}
+
+.w-40 {
+    width: 40% !important;
+}
+
+.w-60 {
+    width: 60% !important;
+}
 /* Akram Sabbah */
