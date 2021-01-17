@@ -21,10 +21,10 @@ var historyEl = document.querySelector("#history");
 // query OpenWeather API for the given city name and handle it
 // if changeHistory is false, don't update the search history
 var getCity = function (name, changeHistory) {
-    var apiUrl = "http://api.openweathermap.org/data/2.5/weather?q=" + name +
+    var apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + name +
       "&appid=118ffe51d5d5c6c938996e3658689365";
 
-    var forecastUrl = "http://api.openweathermap.org/data/2.5/forecast?q=" + name +
+    var forecastUrl = "https://api.openweathermap.org/data/2.5/forecast?q=" + name +
       "&appid=118ffe51d5d5c6c938996e3658689365"
     
     fetch(apiUrl).then(function(response) {
