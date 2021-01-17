@@ -11,7 +11,60 @@ var cityForecastEl = document.querySelector("#five-day-forecast");
 
 
 
+
 /* FUNCTIONS */
+// query OpenWeather API for the given city name and handle it
+var getCity = function (name) {
+    var apiUrl = "http://api.openweathermap.org/data/2.5/weather?q=" + name +
+      "&appid=118ffe51d5d5c6c938996e3658689365";
+    
+    fetch(apiUrl).then(function(response) {
+        if (response.ok) {
+            response.json().then(function (data) {
+                handleCityData(data);
+            });
+        }
+        else {
+            alert("Error: " + response.statusText);
+        }
+    });
+};
+
+// constructs a cityInfo object from data and displays it
+var handleCityData = function (data) {
+    // format date from UTC unix timestamp to a MM/DD/YYYY string
+    var date = moment.unix(data.dt).format("MM/DD/YYYY");
+
+    // build all of cityInfo except the uvIndex
+    var cityInfo = {
+        name: data.name,
+        date: date,
+        weatherIcon: data.weather[0].icon,
+        desc: data.weather[0].desc,
+        temp: data.main.temp,
+        humidity: data.main.humidity,
+        windSpeed: data.wind.speed
+    };
+    
+    // fetch uv data based on latitude and longitude
+    var uvUrl = "https://api.openweathermap.org/data/2.5/uvi?lat=" + data.coord.lat +
+      "&lon=" + data.coord.lon + "&appid=118ffe51d5d5c6c938996e3658689365";
+
+    fetch(uvUrl).then(function(response) {
+        if (response.ok) {
+            response.json().then(function (data) {
+                // if success, we have everything we need to build cityInfo
+                cityInfo.uvIndex = data.value;
+                displayCity(cityInfo);
+            });
+        }
+        else {
+            alert("Error: " + response.statusText);
+        }
+    });
+};
+
+// display the given cityInfo
 var displayCity = function (cityInfo) {
     // clear old cityDisplayEl
     cityDisplayEl.innerHTML = "";
@@ -55,7 +108,13 @@ var displayCity = function (cityInfo) {
 
     // append the finished card to cityDisplayEl
     cityDisplayEl.appendChild(cardEl);
-}
+};
+
+
+
+/* EVENT LISTENERS */
+
+
 
 
 /* MAIN */
