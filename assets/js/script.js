@@ -3,11 +3,12 @@
 // which looks like: { name, date, weatherIcon, desc, temp, humidity, windSpeed, uvIndex }
 
 // array to hold past city names
-var history = [];
+var searchHistory = [];
 
 // grab the various necessary elements
 var cityDisplayEl = document.querySelector("#city-display");
 var cityForecastEl = document.querySelector("#five-day-forecast");
+var historyEl = document.querySelector("#history");
 
 
 
@@ -30,10 +31,17 @@ var getCity = function (name) {
     });
 };
 
-// constructs a cityInfo object from data and displays it
+
+// construct a cityInfo object from data and displays it
 var handleCityData = function (data) {
+    // add the name of this city to the searchHistory array and push to localStorage
+    updateHistory(data.name);
+
     // format date from UTC unix timestamp to a MM/DD/YYYY string
     var date = moment.unix(data.dt).format("MM/DD/YYYY");
+
+    // format temperature from Kelvin to Fahrenheit
+    var temp = (data.main.temp - 273.15) * 9/5 + 32;
 
     // build all of cityInfo except the uvIndex
     var cityInfo = {
@@ -41,7 +49,7 @@ var handleCityData = function (data) {
         date: date,
         weatherIcon: data.weather[0].icon,
         desc: data.weather[0].desc,
-        temp: data.main.temp,
+        temp: temp.toFixed(2),
         humidity: data.main.humidity,
         windSpeed: data.wind.speed
     };
@@ -53,9 +61,10 @@ var handleCityData = function (data) {
     fetch(uvUrl).then(function(response) {
         if (response.ok) {
             response.json().then(function (data) {
-                // if success, we have everything we need to build cityInfo
+                // if success, we have everything we need to build cityInfo.
                 cityInfo.uvIndex = data.value;
                 displayCity(cityInfo);
+                updateStorage(cityInfo); // push to localStorage
             });
         }
         else {
@@ -63,6 +72,7 @@ var handleCityData = function (data) {
         }
     });
 };
+
 
 // display the given cityInfo
 var displayCity = function (cityInfo) {
@@ -111,6 +121,50 @@ var displayCity = function (cityInfo) {
 };
 
 
+// display searchHistory on the left side of the page
+var displayHistory = function () {
+    // clear the ul
+    historyEl.innerHTML = "";
+
+    // make an li element for each name in searchHistory
+    for (let i = searchHistory.length-1; i >= 0; i--) {
+        var listNameEl = document.createElement("li");
+        listNameEl.className = "list-group-item";
+        listNameEl.textContent = searchHistory[i];
+
+        // append this list element to the ul
+        historyEl.appendChild(listNameEl);
+    }
+};
+
+// get searchHistory and lastCity from localStorage and display them
+var getStorage = function () {
+    searchHistory = JSON.parse(localStorage.getItem("searchHistory")) || [];
+    displayHistory();
+
+    var lastCity = localStorage.getItem("lastCity");
+    if (lastCity) {
+        displayCity(JSON.parse(lastCity));
+    }
+};
+
+// push most recent name to searchHistory, then push searchHistory to localStorage
+var updateHistory = function (name) {
+    // if searchHistory is too big, remove the first element
+    if (searchHistory.length >= 10) {
+        searchHistory.shift();
+    }
+    searchHistory.push(name);
+    displayHistory();
+    localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
+};
+
+// push the currently displayed city's cityInfo object to localStorage
+var updateStorage = function (cityInfo) {
+    localStorage.setItem("lastCity", JSON.stringify(cityInfo));
+};
+
+
 
 /* EVENT LISTENERS */
 
@@ -118,5 +172,6 @@ var displayCity = function (cityInfo) {
 
 
 /* MAIN */
+getStorage();
 
 /* Akram Sabbah */
