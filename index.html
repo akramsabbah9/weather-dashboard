@@ -23,7 +23,7 @@
     <div class="container-fluid">
         <div class="row">
 
-            <!-- left side: split in two again -->
+            <!-- left side: form and history -->
             <div class="col-sm-4 bg-light">
                 <!-- top part: "search for a city" form -->
                 <form id="city-form" class="form-group p-1">
@@ -40,13 +40,74 @@
                 <ul id="history" class="list-group">
                     <li class="list-group-item">Test: Dublin</li>
                     <li class="list-group-item">Test: San Francisco</li>
+                    <li class="list-group-item">Test: San Jose</li>
+                    <li class="list-group-item">Test: Orlando</li>
                 </ul>
             </div>
-            <!-- right side: main -->
-            <main class="col-sm border">
-                <p>test <br><br><br><br><br><br><br><br><br><br><br></p>
+
+            <!-- right side: main card and 5 day forecast -->
+            <main class="col-sm">
+                <!-- <p>test <br><br><br><br><br><br><br><br><br><br><br></p> -->
                 <!-- top part: display the city that was clicked on  -->
+                <div id="city-display" class="card mt-4 mb-3 pb-3">
+                    <div class="card-body">
+                        <h2 class="card-title pt-2 pb-2">
+                            Atlanta <span id="date">(8/15/2019)</span> <span id="weather-icon">☁️</span>
+                        </h2>
+                        <p class="card-text text-muted">Temperature: 10</p>
+                        <p class="card-text text-muted">Humidity: 41%</p>
+                        <p class="card-text text-muted">Wind Speed: 4.7 MPH</p>
+                        <p class="card-text text-muted">UV Index: <span class="btn bg-danger text-white">9.49</span></p>
+                    </div>
+                </div>
                 <!-- bottom part: display a 5-day weather forecast with cards -->
+                <h2>5-Day Forecast:</h2>
+                <div id="five-day-forecast" class="row">
+                    <div class="card col-sm-2 bg-primary text-white p-2 ml-3">
+                        <h5 class="card-title">8/16/2019</h5>
+                        <p class="card-text text-center">☀️</p>
+                        <p class="card-text">Temp: 86.84 ˚F</p>
+                        <p class="card-text">Humidity: 43%</p>
+                        <p class="card-text">Wind Speed: 4.7 MPH</p>
+                        <p class="card-text">UV Index: 9.49</p>
+                    </div>
+
+                    <div class="card col-sm-2 bg-primary text-white p-2 ml-3">
+                        <h5 class="card-title">8/16/2019</h5>
+                        <p class="card-text text-center">☀️</p>
+                        <p class="card-text">Temp: 86.84 ˚F</p>
+                        <p class="card-text">Humidity: 43%</p>
+                        <p class="card-text">Wind Speed: 4.7 MPH</p>
+                        <p class="card-text">UV Index: 9.49</p>
+                    </div>
+
+                    <div class="card col-sm-2 bg-primary text-white p-2 ml-3">
+                        <h5 class="card-title">8/16/2019</h5>
+                        <p class="card-text text-center">☀️</p>
+                        <p class="card-text">Temp: 86.84 ˚F</p>
+                        <p class="card-text">Humidity: 43%</p>
+                        <p class="card-text">Wind Speed: 4.7 MPH</p>
+                        <p class="card-text">UV Index: 9.49</p>
+                    </div>
+
+                    <div class="card col-sm-2 bg-primary text-white p-2 ml-3">
+                        <h5 class="card-title">8/16/2019</h5>
+                        <p class="card-text text-center">☀️</p>
+                        <p class="card-text">Temp: 86.84 ˚F</p>
+                        <p class="card-text">Humidity: 43%</p>
+                        <p class="card-text">Wind Speed: 4.7 MPH</p>
+                        <p class="card-text">UV Index: 9.49</p>
+                    </div>
+
+                    <div class="card col-sm-2 bg-primary text-white p-2 ml-3">
+                        <h5 class="card-title">8/16/2019</h5>
+                        <p class="card-text text-center">☀️</p>
+                        <p class="card-text">Temp: 86.84 ˚F</p>
+                        <p class="card-text">Humidity: 43%</p>
+                        <p class="card-text">Wind Speed: 4.7 MPH</p>
+                        <p class="card-text">UV Index: 9.49</p>
+                    </div>
+                </div>
             </main>
         </div>
     </div>
