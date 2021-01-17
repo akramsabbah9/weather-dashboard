@@ -17,14 +17,15 @@ var historyEl = document.querySelector("#history");
 
 /* FUNCTIONS */
 // query OpenWeather API for the given city name and handle it
-var getCity = function (name) {
+// if changeHistory is false, don't update the search history
+var getCity = function (name, changeHistory) {
     var apiUrl = "http://api.openweathermap.org/data/2.5/weather?q=" + name +
       "&appid=118ffe51d5d5c6c938996e3658689365";
     
     fetch(apiUrl).then(function(response) {
         if (response.ok) {
             response.json().then(function (data) {
-                handleCityData(data);
+                handleCityData(data, changeHistory);
             });
         }
         else {
@@ -35,9 +36,11 @@ var getCity = function (name) {
 
 
 // construct a cityInfo object from data and displays it
-var handleCityData = function (data) {
-    // add the name of this city to the searchHistory array and push to localStorage
-    updateHistory(data.name);
+var handleCityData = function (data, changeHistory) {
+    // if changeHistory is true, add name to search history and update localStorage
+    if (changeHistory) {
+        updateHistory(data.name);
+    }
 
     // format date from UTC unix timestamp to a MM/DD/YYYY string
     var date = moment.unix(data.dt).format("MM/DD/YYYY");
@@ -139,6 +142,7 @@ var displayHistory = function () {
     }
 };
 
+
 // get searchHistory and lastCity from localStorage and display them
 var getStorage = function () {
     searchHistory = JSON.parse(localStorage.getItem("searchHistory")) || [];
@@ -149,6 +153,7 @@ var getStorage = function () {
         displayCity(JSON.parse(lastCity));
     }
 };
+
 
 // push most recent name to searchHistory, then push searchHistory to localStorage
 var updateHistory = function (name) {
@@ -161,10 +166,12 @@ var updateHistory = function (name) {
     localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
 };
 
+
 // push the currently displayed city's cityInfo object to localStorage
 var updateStorage = function (cityInfo) {
     localStorage.setItem("lastCity", JSON.stringify(cityInfo));
 };
+
 
 // when the form is submitted, call getCity using the inputted city name.
 var formSubmitHandler = function (event) {
@@ -173,7 +180,7 @@ var formSubmitHandler = function (event) {
 
     // call getCity and clear the search input
     if (name) {
-        getCity(name);
+        getCity(name, true);
         searchInputEl.value = "";
     }
     else {
@@ -182,9 +189,17 @@ var formSubmitHandler = function (event) {
 };
 
 
+// when an item in the search history is clicked, call getCity using its name
+// DON'T update history.
+var historyClickHandler = function (event) {
+    getCity(event.target.textContent, false);
+};
+
+
 
 /* EVENT LISTENERS */
 searchFormEl.addEventListener("submit", formSubmitHandler);
+historyEl.addEventListener("click", historyClickHandler);
 
 
 
