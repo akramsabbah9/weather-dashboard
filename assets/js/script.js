@@ -6,6 +6,8 @@
 var searchHistory = [];
 
 // grab the various necessary elements
+var searchFormEl = document.querySelector("#city-form");
+var searchInputEl = document.querySelector("#city-search");
 var cityDisplayEl = document.querySelector("#city-display");
 var cityForecastEl = document.querySelector("#five-day-forecast");
 var historyEl = document.querySelector("#history");
@@ -164,10 +166,25 @@ var updateStorage = function (cityInfo) {
     localStorage.setItem("lastCity", JSON.stringify(cityInfo));
 };
 
+// when the form is submitted, call getCity using the inputted city name.
+var formSubmitHandler = function (event) {
+    event.preventDefault();
+    var name = searchInputEl.value.trim();
+
+    // call getCity and clear the search input
+    if (name) {
+        getCity(name);
+        searchInputEl.value = "";
+    }
+    else {
+        alert("Please enter a city.");
+    }
+};
+
 
 
 /* EVENT LISTENERS */
-
+searchFormEl.addEventListener("submit", formSubmitHandler);
 
 
 
